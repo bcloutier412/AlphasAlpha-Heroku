@@ -76,6 +76,12 @@ aquaHQ.channelCollection = [
         'channel': '935772422517448725',
         'directedChannel': 'https://discord.com/api/webhooks/958015368142671983/YYstRSYcSVV4D5UT10zBA6uSVqVNevdFpzQH3U10awDOChPoiXCoAqQ1VJBqGulrzPpR',
         'chatChannel': True
+    },
+        #Degen-Pass-Alpha
+    {
+        'channel': '958549427574939658',
+        'directedChannel': 'https://discord.com/api/webhooks/965177940453244998/-WGPTW2pqJbhH9TgFVufBN5T2uLK_Jzl1wos39tvWFL5Hpugj2887D8NBFyb3VRkgzLH',
+        'chatChannel': True
     }
 ]
 
