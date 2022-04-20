@@ -22,25 +22,37 @@ def serverRun(serverObj):
             counter = 0
             for value in serverObj.channelCollection:
                 json_obj = retrieve_messages(serverObj.activeToken ,value['channel'])
-                # try:
-                payload_content_0 = json_obj[0]['id']
-                # except KeyError:
-                #     print('KeyError 0')
+                # print(json_obj)
+                try:
+                    payload_content_0 = json_obj[0]['id']
+                except KeyError:
+                    print('KeyError 0')
 
                 if payload_content_0 != recent_messages[counter]:
-                    # send_message(value['directedChannel'], json_obj[0]['content'], aquaHQ.proxyToken)
-                    webhook = Webhook.from_url(value['directedChannel'], adapter=RequestsWebhookAdapter())
-                    embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['content'])
-                    url = ''
-                    try:
-                        url = json_obj[0]['attachments'][0]['url']
-                    except:
-                        pass
-                    embed.set_image(url=url)
-                    webhook.send(embed=embed)
-                    # send_message(value['directedChannel'], json_obj[0]['content'], aquaHQ.proxyToken)
-                    recent_messages[counter] = payload_content_0
+                        try:
+                            if json_obj[0]['embeds'] != []:
+                                webhook = Webhook.from_url(value['directedChannel'], adapter=RequestsWebhookAdapter())
+                                embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['embeds'][0]['description'])
+                                webhook.send(embed=embed)
+                                    # send_message(value['directedChannel'], json_obj[0]['content'], aquaHQ.proxyToken)
+                            else:
+                                webhook = Webhook.from_url(value['directedChannel'], adapter=RequestsWebhookAdapter())
+                                embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['content'])
+                                url = ''
+                                try:
+                                    url = json_obj[0]['attachments'][0]['url']
+                                except:
+                                    pass
+                                embed.set_image(url=url)
+                                webhook.send(embed=embed)
+                                    # send_message(value['directedChannel'], json_obj[0]['content'], aquaHQ.proxyToken)
+                            recent_messages[counter] = payload_content_0
+                        except KeyError:
+                            print('KeyError 0')
+                            pass
                 counter += 1
+                # print(counter)
+            print(serverObj.serverName + 'working')
             time.sleep(3)
             counter = 0
     except:
@@ -50,73 +62,60 @@ def serverRun(serverObj):
 # <--------------aquaHQ----------------->
 aquaHQ = Server()
 aquaHQ.serverName = 'aquaHQ'
-aquaHQ.activeToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
+aquaHQ.activeToken = "mfa.AqRZyU3IFfWjHsEtDBohbv28PbFsv1lWnOhavoGEddRd1ixdxCvbK2BdqeFfZSVdQgjbJUgWJw0qG8vjrPbo"
 aquaHQ.proxyToken = 'ODg0NjU0MDYyODcwNjAxNzM5.YTbocQ.DWod2UZqL50hkuUcC0Hw0P9mSLo'
 aquaHQ.channelCollection = [
     {
+        #prada alpha
+        'channel': '935774469740429352',
+        'directedChannel': 'https://discord.com/api/webhooks/965507961164292096/coAaxF9gt03najAmqprVx5I51U2SqJpB7TpR_71EcFL1FWp5Ukq_hF7D2DGLE-S4WWJD',
+        'chatChannel': False
+    },
+    {
         #mg-alpha
         'channel': '953866553135353856',
-        'directedChannel': 'https://discord.com/api/webhooks/958625760518737980/TwgPBK9rPiX4cIXjPiB2FqjldE1oRd0lkzUfNfqiPoUwGftf2dsUcqxBMNgwga28q2_1',
+        'directedChannel': 'https://discord.com/api/webhooks/965508048875561011/RfdPSaWiVjwd07B6eYmmoHsZBOxOHWLxO0oa6imMSUBz9szvwGO7udjfGxG0ixgr1ILH',
         'chatChannel': False
     }, 
-        #mrprada-alpha
     {
-        'channel': '935774469740429352',
-        'directedChannel': 'https://discord.com/api/webhooks/958625635364925470/-e_nzkm1JKEYCIsnAWY9SfhEW4GYZYFg3IcYaZCyu7gCH-U76nHnsEx5fUwsSg7AuB-A',
+        #chriss-alpha
+        'channel': '958179025698844703',
+        'directedChannel': 'https://discord.com/api/webhooks/965508108262719488/KeKGkrQkM1_tShhwAN4G7nGMpuJLVmm7D41czPcruxXXCZgu8s1CRX8HCp-xcqWw160D',
         'chatChannel': False
+
     },
         #friazzin-alpha
     {
         'channel': '955831993667584070',
-        'directedChannel': 'https://discord.com/api/webhooks/958625987099263016/U9S8wfcvqH3E9jJ4tbBPcmEBfpe86zljmah4mmtHAkUXYXESWTtporm56sUvOnzMMVpN',
+        'directedChannel': 'https://discord.com/api/webhooks/965508214055637052/8M4xVbMJgM81NG5W04EH3R171QAZx4fgrecBajOhw2YOiffzAoBSkcjyyENRJAiBWJ8h',
         'chatChannel': False
+    },
+    {
+        #miz-alpha
+        'channel': '964304266762280960',
+        'directedChannel': 'https://discord.com/api/webhooks/965508313871691796/9c0UKbZTcBdmvBct7gQIn2Ok2Nyee_Z77o_V3eOUIFi2js-Z036SX6s5ulbq6kV36T5c',
+        'chatChannel': False
+    },
+        #community alpha 
+    {
+        'channel' : '958046386711044168',
+        'directedChannel': 'https://discord.com/api/webhooks/965508433715527710/mSPx5zp02pHlh6286YUX0zdhqkyeAQa3z7IoPqSj5pRCwgi2vBUXEEI4dSIQ-mIaqbV6',
+        'chatChannel': False
+
     },
         #alpha chat
     {
         'channel': '935772422517448725',
-        'directedChannel': 'https://discord.com/api/webhooks/958015368142671983/YYstRSYcSVV4D5UT10zBA6uSVqVNevdFpzQH3U10awDOChPoiXCoAqQ1VJBqGulrzPpR',
+        'directedChannel': 'https://discord.com/api/webhooks/965508551856496690/Bf80kw4LUcE7b5TZ-ENS9X7NeaJlRQGGcj68gSRw8AuZibLc-fXAsW3tAe9kiepQhcA-',
         'chatChannel': True
     },
-        #Degen-Pass-Alpha
-    {
-        'channel': '958549427574939658',
-        'directedChannel': 'https://discord.com/api/webhooks/965177940453244998/-WGPTW2pqJbhH9TgFVufBN5T2uLK_Jzl1wos39tvWFL5Hpugj2887D8NBFyb3VRkgzLH',
-        'chatChannel': True
-    }
-]
-
-
-
-
-
-# <--------------Yuck Pass----------------->
-yuckPass = Server()
-yuckPass.serverName = 'yuckPass'
-yuckPass.activeToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
-yuckPass.proxyToken = 'OTM2NTI2NjIyMjk3ODQ1Nzcy.YfOe0w._gnjg1tHO3bTrF-nHo8TjPTcfEI'
-yuckPass.channelCollection = [
-    {
-        'channel': '951616970665635910',
-        'directedChannel': 'https://discord.com/api/webhooks/958637998445056080/KzyVI5VsmKY9Q1SGvFYsO3nUIzU3NBsU2b8jrAQoYVKPWIJYJAmNWks8DAIQUCK063CG',
-        'chatChannel': False
-    },
-    {
-        'channel': '953375551219974165',
-        'directedChannel': 'https://discord.com/api/webhooks/958638146633994290/qZCkv8TWnDCptJz4Qa8wnEiap6-2Ccfo6an2vvREUldXXBUBbUEsW_3lq6Q1CjjodxoB',
-        'chatChannel': False
-    },
-    {
-        'channel': '928843551855489136',
-        'directedChannel': 'https://discord.com/api/webhooks/958638267203469332/aaaB7_D2mH4Nch-lW-f_aycvD5UCkBpV1c3UGed2P1m2r6TPlzgjWrFCEVJ-ar17FVVz',
-        'chatChannel': True
-    }
 ]
 
 
 # <--------------------Test----------------------->
 test = Server()
 test.serverName = 'test'
-test.activeToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
+test.activeToken = "mfa.AqRZyU3IFfWjHsEtDBohbv28PbFsv1lWnOhavoGEddRd1ixdxCvbK2BdqeFfZSVdQgjbJUgWJw0qG8vjrPbo"
 test.proxyToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
 test.channelCollection = [
     {
@@ -126,38 +125,68 @@ test.channelCollection = [
     }
 ]
 
-
-# <--------------------Alpha Oni----------------------->
-oni = Server()
-oni.serverName = 'Alpha Oni'
-oni.activeToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
-oni.proxyToken = 'OTM2NTMxOTAxNzI3MDE0OTgz.YfOjeA.V5COqMTZ-ql2eFM6FjJ9NIVl4Kk'
-oni.channelCollection = [
+kaijukingz = Server()
+kaijukingz.serverName = 'Kaiju Kingz'
+kaijukingz.activeToken = "mfa.AqRZyU3IFfWjHsEtDBohbv28PbFsv1lWnOhavoGEddRd1ixdxCvbK2BdqeFfZSVdQgjbJUgWJw0qG8vjrPbo"
+kaijukingz.proxyToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
+kaijukingz.channelCollection = [
     {
-        'channel': '945551117411053578',
-        'directedChannel': '957413862209093644',
-        'chatChannel': False
-    },
-    {   
-        'channel': '943990390942470144',
-        'directedChannel': '957413902679965757',
-        'chatChannel': True 
-    },
-    {   
-        'channel': '952888290489540608',
-        'directedChannel': '957414111262675025',
-        'chatChannel': False
-    },
-    {   
-        'channel': '944012876396511272',
-        'directedChannel': '957414637454884864',
-        'chatChannel': False
-    },
-    {   
-        'channel': '944152306897805323',
-        'directedChannel': '957414953256644698',
-        'chatChannel': False
+        'channel': '904260227812192267',
+        'directedChannel': 'https://discord.com/api/webhooks/965505617374634025/slXFX_R-vlZkdTEB2YxG-cS-joV52bjpiqVZ-s8x75ZSO4-4M-HS-YJX50p3CIGvPYkl',
+        'chatChannel': True
     }
 ]
 
-servercollection = [aquaHQ, yuckPass, oni, test]
+llama = Server()
+llama.serverName = 'llamaverse'
+llama.activeToken = "mfa.AqRZyU3IFfWjHsEtDBohbv28PbFsv1lWnOhavoGEddRd1ixdxCvbK2BdqeFfZSVdQgjbJUgWJw0qG8vjrPbo"
+llama.proxyToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
+llama.channelCollection = [
+    {
+        #llama calls
+        'channel': '956781876733952021',
+        'directedChannel': 'https://discord.com/api/webhooks/965509893933117450/qehcCwFcU3TWgCeILX-8QwUijXWDdEf3ijsFerO-D7_t8w6u9-Xu8mrXb52OrSvhdkmh',
+        'chatChannel': True
+    },
+    {
+        #llama upcoming
+        'channel': '956782102031003698',
+        'directedChannel': 'https://discord.com/api/webhooks/965510074321752085/VByYNrhV9k1IuGR2utJT-p27HyOHyBZ9DyfGXRc0wQVyhHnFYzSXbTETBjhb8wVkOOBd',
+        'chatChannel': True
+    }
+]
+
+degenpass = Server()
+degenpass.serverName = 'degenpass'
+degenpass.activeToken = "mfa.AqRZyU3IFfWjHsEtDBohbv28PbFsv1lWnOhavoGEddRd1ixdxCvbK2BdqeFfZSVdQgjbJUgWJw0qG8vjrPbo"
+degenpass.proxyToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
+degenpass.channelCollection = [
+    {
+        'channel': '958549427574939658',
+        'directedChannel': 'https://discord.com/api/webhooks/965511342486335539/973DofSOxdeKC2_R0K26PLcvyZWtfpKYOCsmX-k80XTKE32awxM8HLYdto9L-keXmE3o',
+        'chatChannel': True
+    }
+]
+doodle = Server()
+doodle.serverName = 'doodle'
+doodle.activeToken = 'MTUwNTA2NzkwOTY1MDg0MTYw.Yl0Rvw.0THUAtreVOa3fmE4suweXLp4ajE'
+doodle.proxyToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
+doodle.channelCollection = [
+    {
+        'channel': '958882835442335765',
+        'directedChannel': 'https://discord.com/api/webhooks/965514751536922634/emTOjdkM94lErJkG2kd66B1Tamcczg0jSFm3xSAMyH39LTmBlsrF2Wl-SlqUpLLudD0T',
+        'chatChannel': True
+    }
+]
+rcc = Server()
+rcc.serverName = 'rcc'
+rcc.activeToken = 'mfa.BGgsz4fbXzWfltPyH8_qWlAL3lcx3YeAEOKjSQmp30hagHWSyp40CdrbtU_UadnI26tl8nAVhTHXIl9Jpf52'
+rcc.proxyToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
+rcc.channelCollection = [
+    {
+        'channel': '961256795962232922',
+        'directedChannel': 'https://discord.com/api/webhooks/965517223546462219/L1umlE9vXCwzE10ipLqtuUQq3khTSQwHbeNwIiuT_waGst40pWCwVEFRvtUmZ3f3mG1A',
+        'chatChannel': True
+    }
+]
+servercollection = [aquaHQ, test, kaijukingz, llama, degenpass, doodle, rcc]
