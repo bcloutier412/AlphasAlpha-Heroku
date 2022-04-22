@@ -1,3 +1,4 @@
+from http import server
 import threading
 import discord
 from discord.ext import commands
@@ -38,6 +39,21 @@ from servercollection import *
 #         await message.channel.send('Welcome here')
 
 # client.run('OTU2NjYzNTgzNzE3MDkzMzc3.YjzgZA.rdHO42UDG60_M7AIb8aPTS8dAFU')
+autoRun = False
+def autorun():
+    autoRun = True
+    while autoRun == True:
+        print('start of the iteration')
+        try:    
+            for server in servercollection:
+                if server.isLive == False and server.initialactivation == True:
+                    t = threading.Thread(target=serverRun,args=(server,))
+                    t.start()
+                    print(server.serverName + " is online")
+            print('auto run scanned')
+        except:
+            pass
+        time.sleep(5)
 
 bot = commands.Bot(command_prefix='>')
 
@@ -48,6 +64,7 @@ async def ping(ctx):
 
 @bot.command()
 async def run(ctx, arg=''):
+    global autoRun
     if arg == 'aquaHQ' and aquaHQ.isLive == False:
         aquaHQ.isLive = True
         t = threading.Thread(target=serverRun,args=(aquaHQ,))
@@ -83,6 +100,11 @@ async def run(ctx, arg=''):
         t = threading.Thread(target=serverRun,args=(rcc,))
         t.start()
         await ctx.send('rcc monitor is online')
+    elif arg == 'autorun' and autoRun == False:
+        autoRun = True
+        t = threading.Thread(target=autorun)
+        t.start()
+        await ctx.send('autorun mode monitor is online')
     else:
         await ctx.send('Invalid Entry')
 
@@ -90,24 +112,30 @@ async def run(ctx, arg=''):
 async def end(ctx, arg=''):
     if arg == 'aquaHQ':
         aquaHQ.isLive = False
+        # aquaHQ.initialactivation = False
         await ctx.send('aquaHQ offline')
     elif arg == 'test':
         test.isLive = False
         await ctx.send('test offline')
     elif arg == 'kaijukingz':
         kaijukingz.isLive = False
+        kaijukingz.initialactivation = False
         await ctx.send('Kaiju Kingz offline')
     elif arg == 'llama':
         llama.isLive = False
+        llama.initialactivation = False
         await ctx.send('llama offline')
     elif arg == 'degenpass':
         degenpass.isLive = False
+        degenpass.initialactivation = False
         await ctx.send('degenpass offline')
     elif arg == 'doodle':
         doodle.isLive = False
+        doodle.initialactivation = False
         await ctx.send('doodle offline')
     elif arg == 'rcc':
         rcc.isLive = False
+        rcc.initialactivation = False
         await ctx.send('rcc offline')
     else:
         await ctx.send('Invalid Arg')
@@ -142,4 +170,3 @@ async def status(ctx):
 #         await ctx.send('Please pass in all required arguements.')
     
 bot.run('OTU2NjYzNTgzNzE3MDkzMzc3.YjzgZA.BnDgVc_fwiX2RhCeRqs-WGhab0g')
-

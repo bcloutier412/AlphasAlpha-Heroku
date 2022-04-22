@@ -2,7 +2,7 @@ import time
 from requestsfunc import retrieve_messages, send_message
 from discord import Webhook, RequestsWebhookAdapter, Embed
 import discord
-
+import threading
 class Server():
     # activeToken is the user that is in the server we are scrapping from
     # proxyToken 
@@ -12,6 +12,7 @@ class Server():
         self.proxyToken = ''
         self.channelCollection = []
         self.isLive = False
+        self.initialactivation = False
 
 def serverRun(serverObj):
     recent_messages = []
@@ -19,7 +20,9 @@ def serverRun(serverObj):
         recent_messages.append('')
     try:
         while serverObj.isLive:
+            print(threading.active_count())
             counter = 0
+            serverObj.initialactivation = True
             for value in serverObj.channelCollection:
                 json_obj = retrieve_messages(serverObj.activeToken ,value['channel'])
                 # print(json_obj)
@@ -57,8 +60,19 @@ def serverRun(serverObj):
             counter = 0
     except:
         serverObj.isLive = False
-
-
+# autoRun = False
+# def autorun():
+#     autoRun = True
+#     while autoRun == True:
+#         print('start of the iteration')
+#         try:    
+#             for server in servercollection:
+#                 if server.isLive == False and server.initialactivation == True:
+#                     server.isLive = True
+#             print('auto run scanned')
+#         except:
+#             pass
+#         time.sleep(5)
 # <--------------aquaHQ----------------->
 aquaHQ = Server()
 aquaHQ.serverName = 'aquaHQ'
