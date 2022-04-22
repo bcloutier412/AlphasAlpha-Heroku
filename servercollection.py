@@ -15,51 +15,52 @@ class Server():
         self.initialactivation = False
 
 def serverRun(serverObj):
-    recent_messages = []
-    for value in serverObj.channelCollection:
-        recent_messages.append('')
-    try:
-        while serverObj.isLive:
-            print(threading.active_count())
-            counter = 0
-            serverObj.initialactivation = True
-            for value in serverObj.channelCollection:
-                json_obj = retrieve_messages(serverObj.activeToken ,value['channel'])
-                # print(json_obj)
-                try:
-                    payload_content_0 = json_obj[0]['id']
-                except KeyError:
-                    print('KeyError 0')
+    while serverObj.isLive:
+        recent_messages = []
+        for value in serverObj.channelCollection:
+            recent_messages.append('')
+        try:
+            while True:
+                counter = 0
+                serverObj.initialactivation = True
+                for value in serverObj.channelCollection:
+                    json_obj = retrieve_messages(serverObj.activeToken ,value['channel'])
+                    # print(json_obj)
+                    try:
+                        payload_content_0 = json_obj[0]['id']
+                    except KeyError:
+                        print('KeyError 0')
 
-                if payload_content_0 != recent_messages[counter]:
-                        try:
-                            if json_obj[0]['embeds'] != []:
-                                webhook = Webhook.from_url(value['directedChannel'], adapter=RequestsWebhookAdapter())
-                                embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['embeds'][0]['description'])
-                                webhook.send(embed=embed)
-                                    # send_message(value['directedChannel'], json_obj[0]['content'], aquaHQ.proxyToken)
-                            else:
-                                webhook = Webhook.from_url(value['directedChannel'], adapter=RequestsWebhookAdapter())
-                                embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['content'])
-                                url = ''
-                                try:
-                                    url = json_obj[0]['attachments'][0]['url']
-                                except:
-                                    pass
-                                embed.set_image(url=url)
-                                webhook.send(embed=embed)
-                                    # send_message(value['directedChannel'], json_obj[0]['content'], aquaHQ.proxyToken)
-                            recent_messages[counter] = payload_content_0
-                        except KeyError:
-                            print('KeyError 0')
-                            pass
-                counter += 1
-                # print(counter)
-            print(serverObj.serverName + 'working')
-            time.sleep(3)
-            counter = 0
-    except:
-        serverObj.isLive = False
+                    if payload_content_0 != recent_messages[counter]:
+                            try:
+                                if json_obj[0]['embeds'] != []:
+                                    webhook = Webhook.from_url(value['directedChannel'], adapter=RequestsWebhookAdapter())
+                                    embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['embeds'][0]['description'])
+                                    webhook.send(embed=embed)
+                                        # send_message(value['directedChannel'], json_obj[0]['content'], aquaHQ.proxyToken)
+                                else:
+                                    webhook = Webhook.from_url(value['directedChannel'], adapter=RequestsWebhookAdapter())
+                                    embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['content'])
+                                    url = ''
+                                    try:
+                                        url = json_obj[0]['attachments'][0]['url']
+                                    except:
+                                        pass
+                                    embed.set_image(url=url)
+                                    webhook.send(embed=embed)
+                                        # send_message(value['directedChannel'], json_obj[0]['content'], aquaHQ.proxyToken)
+                                recent_messages[counter] = payload_content_0
+                            except KeyError:
+                                print('KeyError 0')
+                                pass
+                    counter += 1
+                    # print(counter)
+                print(serverObj.serverName + 'working')
+                time.sleep(3)
+                counter = 0
+        except:
+            # serverObj.isLive = False
+            pass
 # autoRun = False
 # def autorun():
 #     autoRun = True
