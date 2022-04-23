@@ -21,7 +21,7 @@ def serverRun(serverObj):
         for value in serverObj.channelCollection:
             recent_messages.append('')
         # try:
-        while True:
+        while serverObj.isLive:
             counter = 0
             for value in serverObj.channelCollection:
                 json_obj = retrieve_messages(serverObj.activeToken ,value['channel'])
@@ -30,63 +30,32 @@ def serverRun(serverObj):
                     payload_content_0 = json_obj[0]['id']
                 except KeyError:
                     print(serverObj.serverName +' KeyError 0')
-
                 if payload_content_0 != recent_messages[counter]:
-                    # try:
-                            # if json_obj[0]['embeds'] != []:
-                            #     webhook = Webhook.from_url(value['directedChannel'], adapter=RequestsWebhookAdapter())
-                            #     embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['embeds'][0]['description'])
-                            #     webhook.send(embed=embed)
-                            #         # send_message(value['directedChannel'], json_obj[0]['content'], aquaHQ.proxyToken)
-                            # else:
-                            #     webhook = Webhook.from_url(value['directedChannel'], adapter=RequestsWebhookAdapter())
-                            #     embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['content'])
-                            #     url = ''
-                            #     try:
-                            #         url = json_obj[0]['attachments'][0]['url']
-                            #     except:
-                            #         pass
-                            #     embed.set_image(url=url)
-                            #     webhook.send(embed=embed)
-                            #         # send_message(value['directedChannel'], json_obj[0]['content'], aquaHQ.proxyToken)
                     embedsList = []
                     if  json_obj[0]['content'] != '':
                         embed = discord.Embed(title=json_obj[0]['author']['username'],description=json_obj[0]['content'])
                         embedsList.append(embed)
-                        
                     try:
                         if json_obj[0]['embeds'] != []:
                             for count, embed in enumerate(json_obj[0]['embeds']):
-                                embed = discord.Embed(title=json_obj[0]['embeds'][count]['title'], description=json_obj[0]['embeds'][count]['description'])
-                                # embed = json_obj[0]['embeds'][count]
+                                embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['embeds'][count]['description'])
                                 embedsList.append(embed)
                     except KeyError:
                         pass
                     if json_obj[0]['attachments'] != []:
                         embed = discord.Embed(title=json_obj[0]['author']['username'])
                         for count, embed in enumerate(json_obj[0]['attachments']):
-                                # try:
                             embed = discord.Embed(title=json_obj[0]['author']['username'])
                             url = json_obj[0]['attachments'][0]['url']
                             embed.set_image(url=url)
                             embedsList.append(embed)
-                            # except:
-                            #     pass
-                    # for count, embed in enumerate(embeds):
-                    #     print(count)
-                    #     webhook.send(embed=embed)
-                    #     print(serverObj.serverName + 'working')
                     if embedsList != []:
                         webhook = Webhook.from_url(value['directedChannel'], adapter=RequestsWebhookAdapter())
                         webhook.send(embeds=embedsList)
                         embeds = []
-                    # print(serverObj.serverName + 'working')
                     recent_messages[counter] = payload_content_0
-                    # except KeyError:
-                    #     print(serverObj.serverName +' KeyError 0')
-                    #     pass
                 counter += 1
-                    # print(counter)
+            
             print(serverObj.serverName + 'working')
             time.sleep(3)
             counter = 0

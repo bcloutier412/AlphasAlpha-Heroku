@@ -4,41 +4,6 @@ import discord
 from discord.ext import commands
 from servercollection import *
 
-
-# def ping_hosts_and_put_in_db():
-#     while True:
-#         print('ping a host...')
-#         time.sleep(3)
-
-# def main_menu():
-#     while True:
-#         choice = input('choose an option ')
-#         if choice == 'scan':
-#             t = threading.Thread(target=ping_hosts_and_put_in_db)
-#             t.start()
-#         else:
-#             print('valid options are "scan"')
-
-# if __name__ == '__main__':
-#     main_menu()
-
-# client = discord.Client()
-
-# @client.event
-# async def on_ready():
-#     print('Bot is now online and ready to roll')
-
-
-# @client.event
-# async def on_message(message):
-
-#     if message.author == client.user:
-#         return
-    
-#     if message.content == 'hello':
-#         await message.channel.send('Welcome here')
-
-# client.run('OTU2NjYzNTgzNzE3MDkzMzc3.YjzgZA.rdHO42UDG60_M7AIb8aPTS8dAFU')
 autoRun = False
 def autorun():
     autoRun = True
