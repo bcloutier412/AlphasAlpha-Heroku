@@ -105,6 +105,8 @@ async def run(ctx, arg=''):
         t = threading.Thread(target=autorun)
         t.start()
         await ctx.send('autorun mode monitor is online')
+    elif arg =='sendembed':
+        sendEmbed()
     else:
         await ctx.send('Invalid Entry')
 
