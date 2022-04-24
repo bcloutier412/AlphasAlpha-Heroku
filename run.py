@@ -30,6 +30,7 @@ async def ping(ctx):
 @bot.command()
 async def run(ctx, arg=''):
     global autoRun
+    global delayedMessageBot
     if arg == 'aquaHQ' and aquaHQ.isLive == False:
         aquaHQ.isLive = True
         t = threading.Thread(target=serverRun,args=(aquaHQ,))
@@ -72,6 +73,11 @@ async def run(ctx, arg=''):
         await ctx.send('autorun mode monitor is online')
     elif arg =='sendembed':
         sendEmbed()
+    elif arg == 'delayedmonitor' and delayedMessageBot == False:
+        delayedMessageBot = True
+        t = threading.Thread(target=parseSendMessageCollection)
+        t.start()
+        await ctx.send('deplayed monitor online mode monitor is online')
     else:
         await ctx.send('Invalid Entry')
 
