@@ -1,10 +1,16 @@
 import json
 import time
+from tkinter import E
 from requestsfunc import retrieve_messages, send_message
 from discord import Webhook, RequestsWebhookAdapter, Embed
 import discord
 import threading
 import time
+import logging
+logging.basicConfig(filename='myapp.log', level=logging.DEBUG, 
+                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
+logger=logging.getLogger(__name__)
+
 delayedMessageCollection = []
 delayedMessageBot = False
 class Server():
@@ -20,54 +26,61 @@ class Server():
 
 def serverRun(serverObj):
     global  delayedMessageCollection
-    while serverObj.isLive:
-        recent_messages = []
-        for value in serverObj.channelCollection:
-            recent_messages.append('')
-        # try:
+    try:
         while serverObj.isLive:
-            counter = 0
+            recent_messages = []
             for value in serverObj.channelCollection:
-                json_obj = retrieve_messages(serverObj.activeToken ,value['channel'])
-                # print(json_obj)
-                try:
-                    payload_content_0 = json_obj[0]['id']
-                except KeyError:
-                    print(serverObj.serverName +' KeyError 0')
-                if payload_content_0 != recent_messages[counter]:
-                    embedsList = []
-                    if  json_obj[0]['content'] != '':
-                        embed = discord.Embed(title=json_obj[0]['author']['username'],description=json_obj[0]['content'])
-                        embedsList.append(embed)
+                recent_messages.append('')
+            # try:
+            while serverObj.isLive:
+                counter = 0
+                for value in serverObj.channelCollection:
                     try:
-                        if json_obj[0]['embeds'] != []:
-                            for count, embed in enumerate(json_obj[0]['embeds']):
-                                embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['embeds'][count]['description'])
-                                embedsList.append(embed)
-                    except KeyError:
-                        pass
-                    if json_obj[0]['attachments'] != []:
-                        embed = discord.Embed(title=json_obj[0]['author']['username'])
-                        for count, embed in enumerate(json_obj[0]['attachments']):
-                            embed = discord.Embed(title=json_obj[0]['author']['username'])
-                            url = json_obj[0]['attachments'][0]['url']
-                            embed.set_image(url=url)
+                        json_obj = retrieve_messages(serverObj.activeToken ,value['channel'])
+                    except Exception as err:
+                        logger.error(serverObj.serverName)
+                        logger.error(err)
+                    # print(json_obj)
+                    payload_content_0 = json_obj[0]['id']
+                        # logger.error(err)
+                    if payload_content_0 != recent_messages[counter]:
+                        embedsList = []
+                        if  json_obj[0]['content'] != '':
+                            embed = discord.Embed(title=json_obj[0]['author']['username'],description=json_obj[0]['content'])
                             embedsList.append(embed)
-                    if embedsList != []:
-                        webhook = Webhook.from_url(value['directedChannel'], adapter=RequestsWebhookAdapter())
-                        webhook.send(embeds=embedsList)
-                        timestamp = time.time()
-                        listitem = [embedsList, value['directedChannel'], value['delayedWebhook'],timestamp]
-                        delayedMessageCollection.append(listitem)
-                    recent_messages[counter] = payload_content_0
-                counter += 1
-            
-            # print(serverObj.serverName + 'working')
-            time.sleep(3)
-            counter = 0
-        # except:
-        #     # serverObj.isLive = False
-        #     pass
+                        try:
+                            if json_obj[0]['embeds'] != []:
+                                for count, embed in enumerate(json_obj[0]['embeds']):
+                                    embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['embeds'][count]['description'])
+                                    embedsList.append(embed)
+                        except Exception as err:
+                            logger.error(serverObj.serverName)
+                            logger.error(err)
+                        if json_obj[0]['attachments'] != []:
+                            embed = discord.Embed(title=json_obj[0]['author']['username'])
+                            for count, embed in enumerate(json_obj[0]['attachments']):
+                                embed = discord.Embed(title=json_obj[0]['author']['username'])
+                                url = json_obj[0]['attachments'][0]['url']
+                                embed.set_image(url=url)
+                                embedsList.append(embed)
+                        if embedsList != []:
+                            webhook = Webhook.from_url(value['directedChannel'], adapter=RequestsWebhookAdapter())
+                            webhook.send(embeds=embedsList)
+                            timestamp = time.time()
+                            listitem = [embedsList, value['directedChannel'], value['delayedWebhook'],timestamp]
+                            delayedMessageCollection.append(listitem)
+                        recent_messages[counter] = payload_content_0
+                    counter += 1
+                
+                # print(serverObj.serverName + 'working')
+                time.sleep(3)
+                counter = 0
+            # except:
+            #     # serverObj.isLive = False
+            #     pass
+    except Exception as err:
+        logger.error(serverObj.serverName)
+        logger.error(err)
 def sendEmbed():
     send_message(956827879591784518, '<----------------------->', "mfa.AqRZyU3IFfWjHsEtDBohbv28PbFsv1lWnOhavoGEddRd1ixdxCvbK2BdqeFfZSVdQgjbJUgWJw0qG8vjrPbo")
     # https://discord.com/api/webhooks/967010755931164692/0H94eZa6keDdxk4XN5IOPf-5k5rCaJvJVo1ln-p5xfN8w9QYylqeG0QOujf6aGuS7GU8
