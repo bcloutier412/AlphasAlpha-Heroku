@@ -18,7 +18,7 @@ def autorun():
             print('auto run scanned')
         except:
             pass
-        time.sleep(5)
+        time.sleep(3)
 
 bot = commands.Bot(command_prefix='>')
 
@@ -110,6 +110,8 @@ async def end(ctx, arg=''):
         rcc.isLive = False
         rcc.initialactivation = False
         await ctx.send('rcc offline')
+    elif arg == 'delayedmonitor':
+        pass
     else:
         await ctx.send('Invalid Arg')
 

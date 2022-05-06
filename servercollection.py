@@ -27,20 +27,22 @@ class Server():
 def serverRun(serverObj):
     global  delayedMessageCollection
     try:
+        recent_messages = []
+        for value in serverObj.channelCollection:
+            recent_messages.append('')
+        # try:
         while serverObj.isLive:
-            recent_messages = []
-            for value in serverObj.channelCollection:
-                recent_messages.append('')
-            # try:
-            while serverObj.isLive:
+            try:
                 counter = 0
                 for value in serverObj.channelCollection:
                     try:
                         json_obj = retrieve_messages(serverObj.activeToken ,value['channel'])
+                        # print(json_obj)
                     except Exception as err:
-                        logger.error(serverObj.serverName)
-                        logger.error(err)
-                    # print(json_obj)
+                        # logger.error(serverObj.serverName)
+                        # logger.error(err)
+                        # print(json_obj)
+                        pass
                     payload_content_0 = json_obj[0]['id']
                         # logger.error(err)
                     if payload_content_0 != recent_messages[counter]:
@@ -51,11 +53,15 @@ def serverRun(serverObj):
                         try:
                             if json_obj[0]['embeds'] != []:
                                 for count, embed in enumerate(json_obj[0]['embeds']):
-                                    embed = discord.Embed(title=json_obj[0]['author']['username'], description=json_obj[0]['embeds'][count]['description'])
+                                    description = ''
+                                    if description != '':
+                                        description = json_obj[0]['embeds'][count]['description']
+                                    embed = discord.Embed(title=json_obj[0]['author']['username'], description=description)
                                     embedsList.append(embed)
                         except Exception as err:
-                            logger.error(serverObj.serverName)
-                            logger.error(err)
+                            pass
+                            # logger.error(serverObj.serverName)
+                            # logger.error(err)
                         if json_obj[0]['attachments'] != []:
                             embed = discord.Embed(title=json_obj[0]['author']['username'])
                             for count, embed in enumerate(json_obj[0]['attachments']):
@@ -73,14 +79,19 @@ def serverRun(serverObj):
                     counter += 1
                 
                 # print(serverObj.serverName + 'working')
-                time.sleep(3)
+                time.sleep(5)
                 counter = 0
-            # except:
-            #     # serverObj.isLive = False
-            #     pass
+            except Exception as err:
+                pass
+                # logger.error(serverObj.serverName)
+                # logger.error(err)
+        # except:
+        #     # serverObj.isLive = False
+        #     pass
     except Exception as err:
         logger.error(serverObj.serverName)
         logger.error(err)
+        serverObj.isLive = False
 def sendEmbed():
     send_message(956827879591784518, '<----------------------->', "mfa.AqRZyU3IFfWjHsEtDBohbv28PbFsv1lWnOhavoGEddRd1ixdxCvbK2BdqeFfZSVdQgjbJUgWJw0qG8vjrPbo")
     # https://discord.com/api/webhooks/967010755931164692/0H94eZa6keDdxk4XN5IOPf-5k5rCaJvJVo1ln-p5xfN8w9QYylqeG0QOujf6aGuS7GU8
@@ -94,19 +105,19 @@ def parseSendMessageCollection():
     global delayedMessageBot
     global delayedMessageCollection
     while True:
-        # try:
-        for count, message in enumerate(delayedMessageCollection):
-            if  time.time() - delayedMessageCollection[count][3]> 600:
-                webhook = Webhook.from_url(delayedMessageCollection[count][2], adapter=RequestsWebhookAdapter())
-                webhook.send(embeds=delayedMessageCollection[count][0])
-                delayedMessageCollection.remove(message)
-        time.sleep(1)
-        # except KeyError:
-        #     pass
+        try:
+            for count, message in enumerate(delayedMessageCollection):
+                if  time.time() - delayedMessageCollection[count][3]> 5400:
+                    webhook = Webhook.from_url(delayedMessageCollection[count][2], adapter=RequestsWebhookAdapter())
+                    webhook.send(embeds=delayedMessageCollection[count][0])
+                    delayedMessageCollection.remove(message)
+            time.sleep(1)
+        except KeyError:
+            pass
 # <--------------aquaHQ----------------->
 aquaHQ = Server()
 aquaHQ.serverName = 'aquaHQ'
-aquaHQ.activeToken = "mfa.AqRZyU3IFfWjHsEtDBohbv28PbFsv1lWnOhavoGEddRd1ixdxCvbK2BdqeFfZSVdQgjbJUgWJw0qG8vjrPbo"
+aquaHQ.activeToken = "mfa.eAR8aA_Zg7npnJXq5x13jgkgKBQNpHwIU0v_R6bQAFbE4WzFyzFSyls8jQAOQr9RSG1irSNiH8YJ1i8VFaLb"
 aquaHQ.proxyToken = 'ODg0NjU0MDYyODcwNjAxNzM5.YTbocQ.DWod2UZqL50hkuUcC0Hw0P9mSLo'
 aquaHQ.channelCollection = [
     {
@@ -154,7 +165,8 @@ aquaHQ.channelCollection = [
     },
         #alpha chat
     {
-        'channel': '935772422517448725',
+
+        'channel': '970314316643467304',
         'directedChannel': 'https://discord.com/api/webhooks/965508551856496690/Bf80kw4LUcE7b5TZ-ENS9X7NeaJlRQGGcj68gSRw8AuZibLc-fXAsW3tAe9kiepQhcA-',
         'chatChannel': True,
         'delayedWebhook': 'https://discord.com/api/webhooks/967364563047694356/fcsW79fpzq2m_5y5Y9j6WJlal-Mu9qycyJYVJZ_x405LriL2lY2OETFERZMJdftNvV9y'
@@ -165,7 +177,7 @@ aquaHQ.channelCollection = [
 # <--------------------Test----------------------->
 test = Server()
 test.serverName = 'test'
-test.activeToken = "mfa.AqRZyU3IFfWjHsEtDBohbv28PbFsv1lWnOhavoGEddRd1ixdxCvbK2BdqeFfZSVdQgjbJUgWJw0qG8vjrPbo"
+test.activeToken = "mfa.eAR8aA_Zg7npnJXq5x13jgkgKBQNpHwIU0v_R6bQAFbE4WzFyzFSyls8jQAOQr9RSG1irSNiH8YJ1i8VFaLb"
 test.proxyToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
 test.channelCollection = [
     {
@@ -177,7 +189,7 @@ test.channelCollection = [
 
 kaijukingz = Server()
 kaijukingz.serverName = 'Kaiju Kingz'
-kaijukingz.activeToken = "mfa.AqRZyU3IFfWjHsEtDBohbv28PbFsv1lWnOhavoGEddRd1ixdxCvbK2BdqeFfZSVdQgjbJUgWJw0qG8vjrPbo"
+kaijukingz.activeToken = "mfa.eAR8aA_Zg7npnJXq5x13jgkgKBQNpHwIU0v_R6bQAFbE4WzFyzFSyls8jQAOQr9RSG1irSNiH8YJ1i8VFaLb"
 kaijukingz.proxyToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
 kaijukingz.channelCollection = [
     {
@@ -190,7 +202,7 @@ kaijukingz.channelCollection = [
 
 llama = Server()
 llama.serverName = 'llamaverse'
-llama.activeToken = "mfa.AqRZyU3IFfWjHsEtDBohbv28PbFsv1lWnOhavoGEddRd1ixdxCvbK2BdqeFfZSVdQgjbJUgWJw0qG8vjrPbo"
+llama.activeToken = "mfa.eAR8aA_Zg7npnJXq5x13jgkgKBQNpHwIU0v_R6bQAFbE4WzFyzFSyls8jQAOQr9RSG1irSNiH8YJ1i8VFaLb"
 llama.proxyToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
 llama.channelCollection = [
     {
@@ -211,7 +223,7 @@ llama.channelCollection = [
 
 degenpass = Server()
 degenpass.serverName = 'degenpass'
-degenpass.activeToken = "mfa.AqRZyU3IFfWjHsEtDBohbv28PbFsv1lWnOhavoGEddRd1ixdxCvbK2BdqeFfZSVdQgjbJUgWJw0qG8vjrPbo"
+degenpass.activeToken = "mfa.eAR8aA_Zg7npnJXq5x13jgkgKBQNpHwIU0v_R6bQAFbE4WzFyzFSyls8jQAOQr9RSG1irSNiH8YJ1i8VFaLb"
 degenpass.proxyToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
 degenpass.channelCollection = [
     {
@@ -235,7 +247,7 @@ doodle.channelCollection = [
 ]
 rcc = Server()
 rcc.serverName = 'rcc'
-rcc.activeToken = 'mfa.BGgsz4fbXzWfltPyH8_qWlAL3lcx3YeAEOKjSQmp30hagHWSyp40CdrbtU_UadnI26tl8nAVhTHXIl9Jpf52'
+rcc.activeToken = 'mfa.JOO0JDifVhNlVEKZVVXQzuyBAg3erV0dHJKJ81bx-VS66PJO5w2C01Md6fs4HH99w6nYhXHFPgnuRCFvTecp'
 rcc.proxyToken = 'MjAzMjM3NTAxODMyMjY1NzMw.YfBRyQ.23lIcSEjKWumZlSJ129xKBSfE9g'
 rcc.channelCollection = [
     {
